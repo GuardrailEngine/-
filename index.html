@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>OMEGA | KEY GENERATOR CORE</title>
+    <style>
+        /* ستايل مدمج لضمان عدم ظهور صفحة بيضاء [cite: 2026-01-20] */
+        body { 
+            background: #020202; 
+            color: #D4AF37; 
+            font-family: 'Courier New', monospace; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0;
+            flex-direction: column; 
+        }
+        .gen-box { 
+            border: 2px solid #D4AF37; 
+            padding: 30px; 
+            text-align: center; 
+            background: #0a0a0a; 
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); 
+            width: 80%;
+            max-width: 500px;
+        }
+        button { 
+            background: transparent; 
+            border: 1px solid #00f2ff; 
+            color: #00f2ff; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            font-weight: bold; 
+            transition: 0.3s;
+        }
+        button:hover { 
+            background: #00f2ff; 
+            color: #000; 
+        }
+        #keyList { 
+            margin-top: 20px; 
+            color: #fff; 
+            font-size: 0.9rem; 
+            max-height: 250px; 
+            overflow-y: auto; 
+            text-align: left; 
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+        .key-item {
+            background: rgba(255,255,255,0.05);
+            margin: 5px 0;
+            padding: 5px;
+            border-right: 3px solid #00f2ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gen-box">
+    <h2 style="letter-spacing: 3px;">KEY GENERATOR v1.0</h2>
+    <p style="color: #888; font-size: 0.8rem;">بروتوكول توليد التراخيص السيادية نشط [cite: 2026-01-20]</p>
+    
+    <button onclick="generateKeys(5)">توليد 5 مفاتيح سيادية</button>
+    
+    <div id="keyList">
+        <p style="color: #444;">في انتظار أمر التوليد...</p>
+    </div>
+</div>
+
+<script>
+    // دالة توليد المفاتيح [cite: 2026-01-20]
+    function generateKeys(amount) {
+        const list = document.getElementById('keyList');
+        list.innerHTML = ""; // مسح القائمة القديمة
+        
+        for(let i=0; i<amount; i++) {
+            // توليد رمز عشوائي معقد [cite: 2026-01-20]
+            const randomPart = Math.random().toString(36).substr(2, 6).toUpperCase();
+            const timestamp = Date.now().toString().slice(-4);
+            const key = `AEGIS-${randomPart}-${timestamp}-2026`;
+            
+            list.innerHTML += `<div class="key-item">${i+1}. ${key}</div>`;
+        }
+    }
+</script>
+
+</body>
+</html>
