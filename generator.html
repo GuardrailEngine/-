@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>AEGIS | CLOUD SYSTEM</title>
+    <style>
+        body { background: #020202; color: #D4AF37; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; flex-direction: column; }
+        .gen-box { border: 2px solid #D4AF37; padding: 25px; text-align: center; background: #0a0a0a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); width: 90%; max-width: 450px; }
+        button { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 12px; cursor: pointer; margin: 10px 5px; font-weight: bold; width: 46%; transition: 0.3s; font-size: 0.7rem; }
+        button:hover { background: #00f2ff; color: #000; }
+        #status { font-size: 0.65rem; color: #00f2ff; margin-top: 10px; border: 1px dashed #333; padding: 5px; }
+        #keyList { margin-top: 15px; color: #fff; font-size: 0.8rem; text-align: right; }
+        .key-tag { color: #00f2ff; border-right: 2px solid #D4AF37; padding-right: 10px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+
+<div class="gen-box">
+    <h2 style="letter-spacing:2px; font-size:1.2rem;">نظام توليد التراخيص</h2>
+    <p style="color:#666; font-size:0.6rem;">ارتباط السحابة: مـفـعـل</p>
+    
+    <button onclick="createKey()">1. توليد مفتاح</button>
+    <button id="upBtn" onclick="syncCloud()" style="border-color:#D4AF37; color:#D4AF37;" disabled>2. رفع للسحابة</button>
+    
+    <div id="status">الحالة: في انتظار الأمر...</div>
+    <div id="keyList"></div>
+</div>
+
+<script>
+    // البيانات المستخرجة من صورك
+    const URL = "https://mutqxosorqevcmbqgbwn.supabase.co";
+    const KEY = "sb_publishable_gNwhjS_UpBfgwrNyLO7nsw_HBbhlag9"; // المفتاح من صورتك الأخيرة
+    
+    let activeKey = "";
+
+    function createKey() {
+        const rand = Math.random().toString(36).substr(2, 6).toUpperCase();
+        activeKey = `AEGIS-${rand}-2026`;
+        document.getElementById('keyList').innerHTML = `<div class="key-tag">المفتاح المستهدف:<br><strong>${activeKey}</strong></div>`;
+        document.getElementById('upBtn').disabled = false;
+        document.getElementById('status').innerText = "تم التجهيز محلياً بنجاح.";
+    }
+
+    async function syncCloud() {
+        document.getElementById('status').innerText = "جاري المزامنة مع الخزنة...";
+        try {
+            const res = await fetch(`${URL}/rest/v1/sovereign_keys`, {
+                method: 'POST',
+                headers: {
+                    'apikey': KEY,
+                    'Authorization': `Bearer ${KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ key_code: activeKey, is_active: true })
+            });
+
+            if (res.ok) {
+                document.getElementById('status').innerText = "✅ تم التأمين: المفتاح متاح للبيع الآن!";
+                document.getElementById('upBtn').disabled = true;
+            } else {
+                document.getElementById('status').innerText = "❌ خطأ في السيرفر: تأكد من جدول SQL.";
+            }
+        } catch (e) {
+            document.getElementById('status').innerText = "❌ فشل الاتصال: تحقق من الشبكة.";
+        }
+    }
+</script>
+</body>
+</html>
