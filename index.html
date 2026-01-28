@@ -1,69 +1,446 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AEGIS | CLOUD SYSTEM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS | Secure License Management</title>
     <style>
-        body { background: #020202; color: #D4AF37; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; flex-direction: column; }
-        .gen-box { border: 2px solid #D4AF37; padding: 25px; text-align: center; background: #0a0a0a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); width: 90%; max-width: 450px; }
-        button { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 12px; cursor: pointer; margin: 10px 5px; font-weight: bold; width: 46%; transition: 0.3s; font-size: 0.7rem; }
-        button:hover { background: #00f2ff; color: #000; }
-        #status { font-size: 0.65rem; color: #00f2ff; margin-top: 10px; border: 1px dashed #333; padding: 5px; }
-        #keyList { margin-top: 15px; color: #fff; font-size: 0.8rem; text-align: right; }
-        .key-tag { color: #00f2ff; border-right: 2px solid #D4AF37; padding-right: 10px; margin: 5px 0; }
+        :root {
+            --primary: #D4AF37;
+            --secondary: #00f2ff;
+            --dark: #020202;
+            --darker: #0a0a0a;
+            --light: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, #111 100%);
+            color: var(--light);
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: var(--primary);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .gen-box {
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 30px;
+            background: var(--darker);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .cloud-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(0, 242, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--secondary);
+            background: transparent;
+            color: var(--secondary);
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            color: var(--dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #666;
+            color: #666;
+        }
+        
+        .btn:disabled:hover {
+            background: transparent;
+            color: #666;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-primary {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .status-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed #333;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        #status {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        .key-display {
+            background: rgba(0, 242, 255, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .key-label {
+            color: #999;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        #generatedKey {
+            color: var(--light);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+        
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #666;
+            color: #999;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .tech-stack {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            text-align: center;
+        }
+        
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .tech-tag {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+        
+        .disclaimer {
+            color: #666;
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">AEGIS</div>
+            <div class="subtitle">Secure License Generation & Cloud Management System</div>
+        </div>
+        
+        <div class="gen-box">
+            <div class="status-indicator">
+                <div class="cloud-status">
+                    <div class="status-dot"></div>
+                    <span>Cloud Connection: Active</span>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn" onclick="generateKey()" id="generateBtn">
+                    <i class="fas fa-key"></i>
+                    Generate License Key
+                </button>
+                <button class="btn btn-primary" onclick="syncWithCloud()" id="syncBtn" disabled>
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Sync to Cloud Vault
+                </button>
+            </div>
+            
+            <div class="status-box">
+                <div id="status">Ready to generate license key...</div>
+            </div>
+            
+            <div id="keyDisplay" style="display: none;">
+                <div class="key-display">
+                    <div class="key-label">GENERATED LICENSE KEY:</div>
+                    <div id="generatedKey"></div>
+                    <button class="copy-btn" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tech-stack">
+                <div style="color: #999; font-size: 0.8rem; margin-bottom: 10px;">TECH STACK DEMONSTRATION:</div>
+                <div class="tech-tags">
+                    <span class="tech-tag">HTML5</span>
+                    <span class="tech-tag">CSS3</span>
+                    <span class="tech-tag">JavaScript ES6+</span>
+                    <span class="tech-tag">REST API</span>
+                    <span class="tech-tag">Supabase</span>
+                    <span class="tech-tag">JWT Authentication</span>
+                    <span class="tech-tag">PostgreSQL</span>
+                    <span class="tech-tag">Cloud Functions</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <i class="fas fa-shield-alt"></i> This is a demo system for portfolio purposes. 
+            Production version includes secure backend API, rate limiting, and encrypted key storage.
+        </div>
+    </div>
 
-<div class="gen-box">
-    <h2 style="letter-spacing:2px; font-size:1.2rem;">نظام توليد التراخيص</h2>
-    <p style="color:#666; font-size:0.6rem;">ارتباط السحابة: مـفـعـل</p>
-    
-    <button onclick="createKey()">1. توليد مفتاح</button>
-    <button id="upBtn" onclick="syncCloud()" style="border-color:#D4AF37; color:#D4AF37;" disabled>2. رفع للسحابة</button>
-    
-    <div id="status">الحالة: في انتظار الأمر...</div>
-    <div id="keyList"></div>
-</div>
-
-<script>
-    // البيانات المستخرجة من صورك
-    const URL = "https://mutqxosorqevcmbqgbwn.supabase.co";
-    const KEY = "sb_publishable_gNwhjS_UpBfgwrNyLO7nsw_HBbhlag9"; // المفتاح من صورتك الأخيرة
-    
-    let activeKey = "";
-
-    function createKey() {
-        const rand = Math.random().toString(36).substr(2, 6).toUpperCase();
-        activeKey = `AEGIS-${rand}-2026`;
-        document.getElementById('keyList').innerHTML = `<div class="key-tag">المفتاح المستهدف:<br><strong>${activeKey}</strong></div>`;
-        document.getElementById('upBtn').disabled = false;
-        document.getElementById('status').innerText = "تم التجهيز محلياً بنجاح.";
-    }
-
-    async function syncCloud() {
-        document.getElementById('status').innerText = "جاري المزامنة مع الخزنة...";
-        try {
-            const res = await fetch(`${URL}/rest/v1/sovereign_keys`, {
-                method: 'POST',
-                headers: {
-                    'apikey': KEY,
-                    'Authorization': `Bearer ${KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ key_code: activeKey, is_active: true })
-            });
-
-            if (res.ok) {
-                document.getElementById('status').innerText = "✅ تم التأمين: المفتاح متاح للبيع الآن!";
-                document.getElementById('upBtn').disabled = true;
-            } else {
-                document.getElementById('status').innerText = "❌ خطأ في السيرفر: تأكد من جدول SQL.";
-            }
-        } catch (e) {
-            document.getElementById('status').innerText = "❌ فشل الاتصال: تحقق من الشبكة.";
+    <script>
+        // Demo Configuration
+        const DEMO_MODE = true;
+        const DEMO_API_URL = "https://api.example.com/licenses"; // Replace with actual backend
+        let currentKey = "";
+        
+        // Generate a secure license key (demo version)
+        function generateKey() {
+            const statusEl = document.getElementById('status');
+            const keyDisplayEl = document.getElementById('keyDisplay');
+            const syncBtn = document.getElementById('syncBtn');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            // Show loading state
+            statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating secure key...';
+            generateBtn.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Generate cryptographically secure random key
+                const prefix = "AEGIS";
+                const year = "2026";
+                
+                // Create a more secure random string
+                const randomPart = Array.from(crypto.getRandomValues(new Uint8Array(6)))
+                    .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+                    .join('')
+                    .substring(0, 6);
+                
+                currentKey = `${prefix}-${randomPart}-${year}`;
+                
+                // Update UI
+                document.getElementById('generatedKey').textContent = currentKey;
+                keyDisplayEl.style.display = 'block';
+                syncBtn.disabled = false;
+                generateBtn.disabled = false;
+                
+                statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:#00ff00;"></i> Key generated successfully! Ready for cloud sync.';
+                
+                // Add animation
+                keyDisplayEl.style.animation = 'none';
+                setTimeout(() => {
+                    keyDisplayEl.style.animation = 'pulse 0.5s';
+                }, 10);
+            }, 800);
         }
-    }
-</script>
+        
+        // Simulate cloud sync (demo version)
+        async function syncWithCloud() {
+            const statusEl = document.getElementById('status');
+            const syncBtn = document.getElementById('syncBtn');
+            
+            // Show loading state
+            statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Securing key in cloud vault...';
+            syncBtn.disabled = true;
+            syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
+            
+            if (DEMO_MODE) {
+                // Simulate API call
+                setTimeout(() => {
+                    // Success simulation
+                    statusEl.innerHTML = '<i class="fas fa-shield-alt" style="color:#00ff00;"></i> <strong>Key secured in cloud vault!</strong> License is now active and available for distribution.';
+                    
+                    // Update sync button
+                    syncBtn.innerHTML = '<i class="fas fa-check"></i> Synced Successfully';
+                    syncBtn.style.borderColor = '#00ff00';
+                    syncBtn.style.color = '#00ff00';
+                    
+                    // Log to console for demo purposes
+                    console.log('Demo: Key would be sent to:', DEMO_API_URL);
+                    console.log('Demo: Key data:', { 
+                        key: currentKey, 
+                        timestamp: new Date().toISOString(),
+                        status: 'active'
+                    });
+                    
+                    // Show success animation
+                    document.querySelector('.cloud-status').style.background = 'rgba(0, 255, 0, 0.1)';
+                    document.querySelector('.status-dot').style.background = '#00ff00';
+                }, 1200);
+            } else {
+                // Real API call would go here
+                try {
+                    const response = await fetch(DEMO_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer YOUR_SECURE_TOKEN' // Would come from backend
+                        },
+                        body: JSON.stringify({
+                            licenseKey: currentKey,
+                            metadata: {
+                                generatedAt: new Date().toISOString(),
+                                version: "2.0"
+                            }
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        statusEl.innerHTML = '<i class="fas fa-shield-alt" style="color:#00ff00;"></i> Key secured in cloud vault!';
+                        syncBtn.innerHTML = '<i class="fas fa-check"></i> Synced Successfully';
+                    } else {
+                        throw new Error('Sync failed');
+                    }
+                } catch (error) {
+                    statusEl.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#ff4444;"></i> Sync failed. Please try again.';
+                    syncBtn.disabled = false;
+                    syncBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sync to Cloud Vault';
+                }
+            }
+        }
+        
+        // Copy key to clipboard
+        function copyToClipboard() {
+            if (!currentKey) return;
+            
+            navigator.clipboard.writeText(currentKey)
+                .then(() => {
+                    const copyBtn = document.querySelector('.copy-btn');
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    copyBtn.style.color = '#00ff00';
+                    copyBtn.style.borderColor = '#00ff00';
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                        copyBtn.style.color = '';
+                        copyBtn.style.borderColor = '';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Copy failed:', err);
+                });
+        }
+        
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('AEGIS License System Demo Loaded');
+            console.log('This is a portfolio demonstration of a secure license management system.');
+            console.log('In production, keys would be generated and stored via secure backend APIs.');
+        });
+    </script>
 </body>
-</html>
+    </html>
