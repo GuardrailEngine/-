@@ -2,8 +2,6 @@
 
 🌐 Live Demo: https://guardrailengine.github.io/-/
 
-https://raw.githubusercontent.com/GuardrailEngine/GuardrailEngine/main/Screenshot_2026-01-28-15-46-54-25_40deb401b9ffe8e1df2f1cc5ba480b12.jpg
-
 A modern, secure license key generation and cloud management system with a sleek hacker-inspired interface.
 
 ✨ Features
